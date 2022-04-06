@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@koa/cors": "^3.3.0",
     "ant-design-vue": "^2.2.8",
+    "axios": "^0.26.1",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
