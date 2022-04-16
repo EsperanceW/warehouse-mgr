@@ -12,9 +12,19 @@ const routes = [
     component: () => import(/* webpackChunkName: "BasicLayout" */ '../layout/BasicLayout/index.vue'),
     children: [
       {
-        path: '/goods',
+        path: 'goods',
         name: 'Goods',
-        component: () => import(/* webpackChunkName: "Warehouse" */ '../views/Goods/index.vue'),
+        component: () => import(/* webpackChunkName: "Goods" */ '../views/Goods/index.vue'),
+      },
+      {
+        path: 'goods/:id',
+        name: 'GoodsDetail',
+        component: () => import(/* webpackChunkName: "GoodsDetail" */ '../views/GoodsDetail/index.vue'),
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: () => import(/* webpackChunkName: "User" */ '../views/Users/index.vue'),
       }
     ],
   }

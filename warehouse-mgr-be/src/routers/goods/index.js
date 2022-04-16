@@ -8,6 +8,15 @@ const GOODS_CONST = {
 };
 
 const Goods = mongoose.model('Goods');
+const InventoryLog = mongoose.model('InventoryLog');
+
+const findGoodsOne = async (id) => {
+    const one = await Goods.findOne({
+        _id: id,
+    }).exec();
+
+    return one;
+};
 
 const router = new Router({
     prefix: '/goods',
@@ -62,6 +71,9 @@ router.get('/list', async (ctx) => {
 
     const list = await Goods
         .find(query)
+        .sort({
+            _id: -1,
+        })
         .skip((page - 1) * size)
         .limit(size)
         .exec();
@@ -108,10 +120,9 @@ router.post('/update/count', async (ctx) => {
 
     num = Number(num);
 
-    const goods = await Goods.findOne({
-        _id: id,
-    }).exec();
+    const goods = await findGoodsOne(id);
 
+    // 没有找到商品
     if (!goods) {
         ctx.body = {
             code: 0,
@@ -143,6 +154,14 @@ router.post('/update/count', async (ctx) => {
 
     const res = await goods.save();
 
+    const log = new InventoryLog({
+        num: Math.abs(num),
+        type,
+        goodsId: id,
+    });
+
+    log.save();
+
     ctx.body = {
         data: res,
         code: 1,
@@ -156,9 +175,7 @@ router.post('/update', async (ctx) => {
         ...others
     } = ctx.request.body;
 
-    const one = await Goods.findOne({
-        _id: id,
-    }).exec();
+    const one = await findGoodsOne(id);
 
     // 没有找到商品
     if (!one) {
@@ -187,6 +204,29 @@ router.post('/update', async (ctx) => {
         code: 1,
         msg: '保存成功',
     }
+});
+
+router.get('/detail/:id', async (ctx) => {
+    const {
+        id,
+    } = ctx.params;
+
+    const one = await findGoodsOne(id);
+
+    // 没有找到商品
+    if (!one) {
+        ctx.body = {
+            code: 0,
+            msg: '没有找到商品',
+        }
+        return;
+    };
+
+    ctx.body = {
+        msg: '查询成功',
+        data: one,
+        code: 1,
+    };
 });
 
 module.exports = router;

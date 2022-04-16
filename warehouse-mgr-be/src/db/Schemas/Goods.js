@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { getMeta } = require('../helpers');
+const { getMeta, preSave } = require('../helpers');
 
 const GoodsSchema = new mongoose.Schema({
     // 商品名
@@ -17,5 +17,7 @@ const GoodsSchema = new mongoose.Schema({
 
     meta: getMeta(),
 });
+
+GoodsSchema.pre('save', preSave);
 
 mongoose.model('Goods', GoodsSchema);

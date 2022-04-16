@@ -1,5 +1,6 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { goods } from '@/service';
+import { useRouter } from 'vue-router';
 import { result, formatTimestamp } from '@/helpers/utils';
 import AddOne from './AddOne/index.vue';
 import Update from './Update/index.vue';
@@ -12,6 +13,8 @@ export default defineComponent({
   },
 
   setup() {
+    const router = useRouter();
+
     const columns = [
       {
         title: '商品名',
@@ -112,12 +115,6 @@ export default defineComponent({
         .success(({ msg }) => {
           message.success(msg);
 
-          // const idx = list.value.findIndex((item) => {
-          //   return item._id === _id;
-          // });
-
-          // list.value.splice(idx, 1);
-
           getList();
         });
     };
@@ -170,14 +167,20 @@ export default defineComponent({
       });
     };
 
-    // 编辑商品信息
+    // 显示更新弹框 编辑商品信息
     const update = ({ record }) => {
       showUpdateModal.value = true;
       curEditGoods.value = record;
     };
 
+    // 更新列表的某一行数据
     const updateCurGoods = (newData) => {
       Object.assign(curEditGoods.value, newData);
+    };
+
+    // 进入商品详情页
+    const toDetail = ({ record }) => {
+      router.push(`/goods/${record._id}`);
     };
 
     return {
@@ -198,6 +201,7 @@ export default defineComponent({
       update,
       curEditGoods,
       updateCurGoods,
+      toDetail,
     };
   },
 });

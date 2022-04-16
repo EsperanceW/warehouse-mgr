@@ -3,7 +3,7 @@ import axios from 'axios';
 export const add = (form) => {
   return axios.post(
     'http://localhost:3000/goods/add',
-    form
+    form,
   );
 };
 
@@ -18,7 +18,7 @@ export const list = (data) => {
 
 export const remove = (id) => {
   return axios.delete(
-    `http://localhost:3000/goods/${id}`
+    `http://localhost:3000/goods/${id}`,
   );
 };
 
@@ -33,5 +33,11 @@ export const update = (data = {}) => {
   return axios.post(
     `http://localhost:3000/goods/update`,
     data,
+  );
+};
+
+export const detail = (id) => {
+  return axios.get(
+    `http://localhost:3000/goods/detail/${id}`,
   );
 };
