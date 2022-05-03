@@ -2,6 +2,17 @@ require('./Schemas/User');
 require('./Schemas/InviteCode');
 require('./Schemas/Goods');
 require('./Schemas/InventoryLog');
+require('./Schemas/Character');
+require('./Schemas/Log');
+require('./Schemas/LogResponse');
+require('./Schemas/ForgetPassword');
+require('./Schemas/GoodsClassify');
+require('./Schemas/Supplier');
+require('./Schemas/InCount');
+require('./Schemas/OutCount');
+require('./Schemas/Warehouse');
+require('./Schemas/InventoryDetail');
+require('./Schemas/Customer');
 
 const mongoose = require('mongoose');
 

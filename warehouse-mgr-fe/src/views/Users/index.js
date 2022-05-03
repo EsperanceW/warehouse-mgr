@@ -1,8 +1,11 @@
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { user } from '@/service';
 import { message } from 'ant-design-vue';
+import { EditOutlined } from '@ant-design/icons-vue';
 import { result, formatTimestamp } from '@/helpers/utils';
 import AddOne from './AddOne/index.vue';
+import { getCharacterInfoById } from '@/helpers/character';
+import store from '@/store';
 
 const columns = [
   {
@@ -10,9 +13,21 @@ const columns = [
     dataIndex: 'account',
   },
   {
+    title: '姓名',
+    slots: {
+      customRender: 'name',
+    },
+  },
+  {
     title: '创建日期',
     slots: {
       customRender: 'createdAt',
+    },
+  },
+  {
+    title: '角色',
+    slots: {
+      customRender: 'character',
     },
   },
   {
@@ -26,6 +41,7 @@ const columns = [
 export default defineComponent({
   components: {
     AddOne,
+    EditOutlined,
   },
 
   setup() {
@@ -35,6 +51,14 @@ export default defineComponent({
     const showAddModal = ref(false);
     const keyword = ref('');
     const isSearch = ref(false);
+    const showEditCharacterModal = ref(false);
+    const showEditNameModal = ref(false);
+
+    const editForm = reactive({
+      character: '',
+      name: '',
+      current: {},
+    });
 
     const getUser = async () => {
       const res = await user.list(curPage.value, 10, keyword.value);
@@ -86,6 +110,42 @@ export default defineComponent({
       getUser();
     };
 
+    const onEdit = (record) => {
+      showEditCharacterModal.value = true;
+
+      editForm.current = record;
+      editForm.character = record.character;
+    };
+
+    const onEditName = (record) => {
+      showEditNameModal.value = true;
+
+      editForm.current = record;
+      editForm.name = record.name;
+    };
+
+    const updateCharacter = async () => {
+      const res = await user.editCharacter(editForm.character, editForm.current._id);
+
+      result(res)
+        .success(({ msg }) => {
+          message.success(msg);
+          showEditCharacterModal.value = false;
+          editForm.current.character = editForm.character;
+        });
+    };
+
+    const updateName = async () => {
+      const res = await user.editName(editForm.name, editForm.current._id);
+
+      result(res)
+        .success(({ msg }) => {
+          message.success(msg);
+          showEditNameModal.value = false;
+          editForm.current.name = editForm.name;
+        });
+    };
+
     return {
       list,
       total,
@@ -101,6 +161,15 @@ export default defineComponent({
       keyword,
       backAll,
       onSearch,
+      getCharacterInfoById,
+      showEditCharacterModal,
+      editForm,
+      onEdit,
+      characterInfo: store.state.characterInfo,
+      updateCharacter,
+      showEditNameModal,
+      onEditName,
+      updateName,
     };
   },
 });

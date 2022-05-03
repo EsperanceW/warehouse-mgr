@@ -10,6 +10,8 @@ const InventoryLogSchema = new mongoose.Schema({
     user: String,
     // 对应商品
     goodsId: String,
+    // 出入库单号
+    inOutId: String,
 
     meta: getMeta(),
 });

@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const mongoose = require('mongoose');
 const { getBody } = require('../../helpers/utils');
 const jwt = require('jsonwebtoken');
+const config = require('../../project.config');
 
 const User = mongoose.model('User');
 const InviteCode = mongoose.model('InviteCode');
@@ -10,15 +11,17 @@ const router = new Router({
     prefix: '/auth',
 });
 
+// 注册
 router.post('/register', async (ctx) => {
     const {
         account,
         password,
+        name,
         inviteCode,
     } = getBody(ctx);
 
     // 做表单校验
-    if (account === '' || password === '' || inviteCode === '') {
+    if (account === '' || password === '' || inviteCode === '' || name === '') {
         ctx.body = {
             code: 0,
             msg: '字段不能为空',
@@ -63,6 +66,7 @@ router.post('/register', async (ctx) => {
     const user = new User({
         account,
         password,
+        name,
     });
 
     // 把创建的用户同步到MongoDB
@@ -81,6 +85,7 @@ router.post('/register', async (ctx) => {
     };
 });
 
+// 登录
 router.post('/login', async (ctx) => {
     const {
         account,
@@ -113,6 +118,7 @@ router.post('/login', async (ctx) => {
 
     const user = {
         account: one.account,
+        character: one.character,
         _id: one._id,
     };
 
@@ -122,7 +128,7 @@ router.post('/login', async (ctx) => {
             msg: '登录成功',
             data: {
                 user,
-                token: jwt.sign(user, 'warehouse-mgr'),
+                token: jwt.sign(user, config.JWT_SECRET),
             },
         };
 

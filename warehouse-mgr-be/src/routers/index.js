@@ -3,6 +3,18 @@ const inviteCode = require('./invite-code');
 const goods = require('./goods');
 const inventoryLog = require('./inventory-log');
 const user = require('./user');
+const character = require('./character');
+const log = require('./log');
+const forgetPassword = require('./forget-password');
+const goodsClassify = require('./goods-classify');
+const profile = require('./profile');
+const dashboard = require('./dashboard');
+const supplier = require('./supplier');
+const inCount = require('./in-count');
+const outCount = require('./out-count');
+const warehouse = require('./warehouse');
+const inventoryDetail = require('./inventory-detail');
+const customer = require('./customer');
 
 module.exports = (app) => {
     app.use(auth.routes());
@@ -10,4 +22,16 @@ module.exports = (app) => {
     app.use(goods.routes());
     app.use(inventoryLog.routes());
     app.use(user.routes());
+    app.use(character.routes());
+    app.use(log.routes());
+    app.use(forgetPassword.routes());
+    app.use(goodsClassify.routes());
+    app.use(profile.routes());
+    app.use(dashboard.routes());
+    app.use(supplier.routes());
+    app.use(inCount.routes());
+    app.use(outCount.routes());
+    app.use(warehouse.routes());
+    app.use(inventoryDetail.routes());
+    app.use(customer.routes());
 };

@@ -1,43 +1,44 @@
-import axios from 'axios';
+import {
+  del, post, get
+} from '@/helpers/request';
 
 export const add = (form) => {
-  return axios.post(
-    'http://localhost:3000/goods/add',
+  return post(
+    '/goods/add',
     form,
   );
 };
 
 export const list = (data) => {
-  return axios.get(
-    'http://localhost:3000/goods/list',
-    {
-      params: data,
-    }
-  );
+  return get('/goods/list', data);
 };
 
 export const remove = (id) => {
-  return axios.delete(
-    `http://localhost:3000/goods/${id}`,
+  return del(
+    `/goods/${id}`,
   );
 };
 
-export const updateCount = (data) => {
-  return axios.post(
-    `http://localhost:3000/goods/update/count`,
-    data,
-  );
-};
+// export const updateCount = (data) => {
+//   return post(
+//     '/goods/update/count',
+//     data,
+//   );
+// };
 
 export const update = (data = {}) => {
-  return axios.post(
-    `http://localhost:3000/goods/update`,
+  return post(
+    '/goods/update',
     data,
   );
 };
 
 export const detail = (id) => {
-  return axios.get(
-    `http://localhost:3000/goods/detail/${id}`,
+  return get(
+    `/goods/detail/${id}`,
   );
+};
+
+export const listAll = () => {
+  return get('/goods/list/all');
 };

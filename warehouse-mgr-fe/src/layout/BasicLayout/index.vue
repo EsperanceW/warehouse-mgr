@@ -6,8 +6,8 @@
         <div class="title">库存管理系统</div>
       </div>
       <div class="right">
-        <div class="hello-msg">你好，XX</div>
-        <div class="logout">退出</div>
+        <div class="hello-msg">你好，{{ user }}</div>
+        <div class="logout" @click="logout">退出</div>
       </div>
     </div>
     <div class="app-header-placeholder"></div>

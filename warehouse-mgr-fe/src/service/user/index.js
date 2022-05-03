@@ -1,31 +1,51 @@
-import axios from 'axios';
+import {
+  del, post, get
+} from '@/helpers/request';
 
 export const list = (page = 1, size = 20, keyword = '') => {
-  return axios.get(
-    'http://localhost:3000/user/list',
+  return get(
+    '/user/list',
     {
-      params: {
-        page,
-        size,
-        keyword,
-      },
+      page,
+      size,
+      keyword,
     }
   );
 };
 
 export const remove = (id) => {
-  return axios.delete(`http://localhost:3000/user/${id}`);
+  return del(`/user/${id}`);
 };
 
-export const add = (account, password) => {
-  return axios.post('http://localhost:3000/user/add', {
+export const add = (account, password, name, character) => {
+  return post('/user/add', {
     account,
     password,
+    name,
+    character,
   });
 };
 
 export const resetPassword = (id) => {
-  return axios.post('http://localhost:3000/user/reset/password', {
+  return post('/user/reset/password', {
     id,
   });
+};
+
+export const editCharacter = (characterId, userId) => {
+  return post('/user/update/character', {
+    character: characterId,
+    userId: userId,
+  });
+};
+
+export const editName = (name, userId) => {
+  return post('/user/update/name', {
+    name,
+    userId: userId,
+  });
+};
+
+export const info = () => {
+  return get('/user/info');
 };

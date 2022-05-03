@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card>
+    <a-card v-only-admin>
       <h2>用户管理</h2>
       <a-divider></a-divider>
       <space-between>
@@ -16,6 +16,14 @@
           <template #createdAt="{ record }">
             {{ formatTimestamp(record.meta.createdAt) }}
           </template>
+          <template #character="{ record }">
+            <a href="javascript:;" @click="onEdit(record)"><EditOutlined /></a>
+            {{ getCharacterInfoById(record.character).title }}
+          </template>
+          <template #name="{ record }">
+            <a href="javascript:;" @click="onEditName(record)"><EditOutlined /></a>
+            {{ record.name }}
+          </template>
           <template #actions="{ record }">
             <a href="javascript:;" @click="resetPassword(record)">重置密码</a>
             &nbsp;
@@ -23,11 +31,19 @@
           </template>
         </a-table>
       </div>
-      <flex-end style="margin-top: 20px" v-if="!isSearch">
+      <flex-end style="margin-top: 22px" v-if="!isSearch">
         <a-pagination v-model:current="curPage" :total="total" :page-size="10" @change="setPage" ></a-pagination>
       </flex-end>
     </a-card>
     <add-one v-model:show="showAddModal" @getList="getUser"></add-one>
+    <a-modal v-model:visible="showEditCharacterModal" title="修改角色" @ok="updateCharacter">
+      <a-select v-model:value="editForm.character" style="width: 200px;">
+        <a-select-option v-for="item in characterInfo" :key="item._id" :value="item._id">{{ item.title }}</a-select-option>
+      </a-select>
+    </a-modal>
+    <a-modal v-model:visible="showEditNameModal" title="修改姓名" @ok="updateName">
+      <a-input v-model:value="editForm.name"></a-input>
+    </a-modal>
   </div>
 </template>
 

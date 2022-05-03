@@ -27,4 +27,4 @@ const preSave = function(next) {
 module.exports = {
     getMeta,
     preSave,
-}
+};

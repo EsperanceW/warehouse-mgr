@@ -3,7 +3,7 @@
     <a-card>
       <space-between>
         <h2>{{ d.name }}</h2>
-        <div>
+        <div v-only-admin>
           <a-button size="small" type="primary" @click="showUpdateModal = true">编辑</a-button>
           &nbsp;
           <a-button size="small" type="danger" @click="remove">删除</a-button>
@@ -18,11 +18,11 @@
           </div>
           <div class="item">
             <div class="title">供应商</div>
-            <div class="content">{{ d.supplier }}</div>
+            <div class="content">{{ getSupplierNameById(d.supplier) }}</div>
           </div>
           <div class="item">
             <div class="title">分类</div>
-            <div class="content">{{ d.classify}}</div>
+            <div class="content">{{ getClassifyTitleById(d.classify) }}</div>
           </div>
         </div>
         <div class="items">
@@ -30,9 +30,28 @@
             <div class="title">上市日期</div>
             <div class="content">{{ formatTimestamp(d.launchDate) }}</div>
           </div>
+          <div class="item">
+            <div class="title">规格</div>
+            <div class="content">{{ d.specification }}</div>
+          </div>
+          <div class="item">
+            <div class="title">单位</div>
+            <div class="content">{{ d.unit }}</div>
+          </div>
         </div>
       </div>
     </a-card>
+    <div class="inventory">
+      <a-card title="库存详情">
+        <div>
+          <a-table :data-source="detail" :columns="inventoryDetailInfo" :pagination="false" bordered></a-table>
+        </div>
+        <space-between style="margin-top: 22px;">
+          <div></div>
+          <a-pagination v-model:current="detailCurPage" :total="detailTotal" :page-size="5" @change="setDetailPage" />
+        </space-between>
+      </a-card>
+    </div>
     <div class="log">
       <a-card title="出入库日志">
         <template #extra>
@@ -56,9 +75,9 @@
             </template>
           </a-table>
         </div>
-        <space-between style="margin-top: 20px;">
+        <space-between style="margin-top: 22px;">
           <div></div>
-          <a-pagination v-model:current="logCurPage" :total="logTotal" :page-size="10" @change="setLogPage" />
+          <a-pagination v-model:current="logCurPage" :total="logTotal" :page-size="5" @change="setLogPage" />
         </space-between>
       </a-card>
     </div>

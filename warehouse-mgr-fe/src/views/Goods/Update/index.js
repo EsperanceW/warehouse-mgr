@@ -1,8 +1,9 @@
 import { defineComponent, reactive, watch } from 'vue';
 import { goods } from '@/service';
 import { message } from 'ant-design-vue';
-import { result, clone } from '@/helpers/utils';
+import { result } from '@/helpers/utils';
 import moment from 'moment';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -16,6 +17,8 @@ export default defineComponent({
       supplier: '',
       launchDate: 0,
       classify: '',
+      specification: '',
+      unit: '',
     });
 
     const close = () => {
@@ -35,6 +38,8 @@ export default defineComponent({
         supplier: editForm.supplier,
         launchDate: editForm.launchDate.valueOf(),
         classify: editForm.classify,
+        specification: editForm.specification,
+        unit: editForm.unit,
       });
 
       result(res)
@@ -50,6 +55,7 @@ export default defineComponent({
       submit,
       props,
       close,
+      store: store.state,
     };
   },
 });

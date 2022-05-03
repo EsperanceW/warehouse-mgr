@@ -23,7 +23,7 @@
           </a-input>
           </div>
           <div class="item">
-            <a href="">忘记密码</a>
+            <a href="javascript:;" @click="forgetPassword">忘记密码</a>
           </div>
           <div class="item">
             <a-button size="large" type="primary" @click="login">
@@ -40,18 +40,25 @@
             </a-input>
           </div>
           <div class="item">
-          <a-input size="large" placeholder="密码" type="password" v-model:value="regForm.password">
-            <template #prefix>
-              <LockOutlined />
-            </template>
-          </a-input>
+            <a-input size="large" placeholder="密码" type="password" v-model:value="regForm.password">
+              <template #prefix>
+                <LockOutlined />
+              </template>
+            </a-input>
           </div>
           <div class="item">
-          <a-input size="large" placeholder="邀请码" v-model:value="regForm.inviteCode">
-            <template #prefix>
-              <MailOutlined />
-            </template>
-          </a-input>
+            <a-input size="large" placeholder="姓名" v-model:value="regForm.name">
+              <template #prefix>
+                <LockOutlined />
+              </template>
+            </a-input>
+          </div>
+          <div class="item">
+            <a-input size="large" placeholder="邀请码" v-model:value="regForm.inviteCode">
+              <template #prefix>
+                <MailOutlined />
+              </template>
+            </a-input>
           </div>
           <div class="item">
             <a-button size="large" type="primary" @click="register">
@@ -64,8 +71,8 @@
   </div>
 </template>
 
-<script src="./authIndex.js"></script>
+<script src="./index.jsx"></script>
 
 <style lang="scss" scoped>
-  @import './authIndex.scss';
+  @import './index.scss';
 </style>

@@ -4,7 +4,9 @@ import { useRouter } from 'vue-router';
 import { result, formatTimestamp } from '@/helpers/utils';
 import AddOne from './AddOne/index.vue';
 import Update from './Update/index.vue';
-import { message, Modal, Input } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
+import { getClassifyTitleById } from '@/helpers/goods-classify';
+import { getSupplierNameById } from '@/helpers/supplier-list';
 
 export default defineComponent({
   components: {
@@ -12,21 +14,35 @@ export default defineComponent({
     Update,
   },
 
-  setup() {
+  props: {
+    simple: Boolean,
+  },
+
+  setup(props) {
     const router = useRouter();
 
     const columns = [
+      {
+        title: '商品编号',
+        dataIndex: 'newId',
+      },
       {
         title: '商品名',
         dataIndex: 'name'
       },
       {
         title: '供应商',
-        dataIndex: 'supplier'
+        slots: {
+          customRender: 'supplier',
+        },
       },
       {
         title: '价格',
         dataIndex: 'price'
+      },
+      {
+        title: '规格',
+        dataIndex: 'specification'
       },
       {
         title: '上市日期',
@@ -37,7 +53,9 @@ export default defineComponent({
       },
       {
         title: '分类',
-        dataIndex: 'classify'
+        slots: {
+          customRender: 'classify',
+        },
       },
       {
         title: '库存',
@@ -46,12 +64,19 @@ export default defineComponent({
         },
       },
       {
+        title: '单位',
+        dataIndex: 'unit'
+      },
+    ];
+
+    if (!props.simple) {
+      columns.push({
         title: '操作',
         slots: {
           customRender: 'actions',
         },
-      },
-    ];
+      });
+    };
 
     const show = ref(false);
     const showUpdateModal = ref(false);
@@ -70,11 +95,12 @@ export default defineComponent({
         keyword: keyword.value,
       });
 
-      result(res).success(({ data }) => {
-        const { list: l, total: t } = data;
-        list.value = l;
-        total.value = t;
-      });
+      result(res)
+        .success(({ data }) => {
+          const { list: l, total: t } = data;
+          list.value = l;
+          total.value = t;
+        });
     };
 
     onMounted(async () => {
@@ -120,52 +146,52 @@ export default defineComponent({
     };
 
     // 更新库存数量
-    const updateCount = (type, record) => {
-      let word = '增加';
+    // const updateCount = (type, record) => {
+    //   let word = '增加';
 
-      if (type === 'OUT_COUNT') {
-        word = '减少';
-      };
+    //   if (type === 'OUT_COUNT') {
+    //     word = '减少';
+    //   };
 
-      Modal.confirm({
-        title: `要${word}多少库存`,
-        content: (
-          <div>
-            <Input class="__goods_input_count" />
-          </div>
-        ),
+    //   Modal.confirm({
+    //     title: `要${word}多少库存`,
+    //     content: (
+    //       <div>
+    //         <Input class="__goods_input_count" />
+    //       </div>
+    //     ),
 
-        onOk: async () => {
-          const el = document.querySelector('.__goods_input_count');
-          let num = el.value;
+    //     onOk: async () => {
+    //       const el = document.querySelector('.__goods_input_count');
+    //       let num = el.value;
 
-          const res = await goods.updateCount({
-            id: record._id,
-            num,
-            type,
-          });
+    //       const res = await goods.updateCount({
+    //         id: record._id,
+    //         num,
+    //         type,
+    //       });
 
-          result(res)
-            .success((data) => {
-              if (type === 'IN_COUNT') {
-                num = Math.abs(num);
-              } else {
-                num = - Math.abs(num);
-              };
+    //       result(res)
+    //         .success(() => {
+    //           if (type === 'IN_COUNT') {
+    //             num = Math.abs(num);
+    //           } else {
+    //             num = - Math.abs(num);
+    //           };
 
-              const one = list.value.find((item) => {
-                return item._id === record._id;
-              });
+    //           const one = list.value.find((item) => {
+    //             return item._id === record._id;
+    //           });
 
-              if (one) {
-                one.count = one.count + num;
+    //           if (one) {
+    //             one.count = one.count + num;
 
-                message.success(`成功${word} ${Math.abs(num)} 件商品`);
-              }
-            });
-        },
-      });
-    };
+    //             message.success(`成功${word} ${Math.abs(num)} 件商品`);
+    //           };
+    //         });
+    //     },
+    //   });
+    // };
 
     // 显示更新弹框 编辑商品信息
     const update = ({ record }) => {
@@ -180,7 +206,7 @@ export default defineComponent({
 
     // 进入商品详情页
     const toDetail = ({ record }) => {
-      router.push(`/goods/${record._id}`);
+      router.push(`/goods/${record.newId}`);
     };
 
     return {
@@ -196,12 +222,16 @@ export default defineComponent({
       backAll,
       isSearch,
       remove,
-      updateCount,
+      // updateCount,
       showUpdateModal,
       update,
       curEditGoods,
       updateCurGoods,
       toDetail,
+      getList,
+      getClassifyTitleById,
+      getSupplierNameById,
+      simple: props.simple,
     };
   },
 });

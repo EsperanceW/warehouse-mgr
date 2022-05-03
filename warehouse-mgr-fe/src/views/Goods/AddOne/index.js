@@ -1,16 +1,20 @@
 import { defineComponent, reactive } from 'vue';
 import { goods } from '@/service';
 import { message } from 'ant-design-vue';
+import store from '@/store';
 import { result, clone } from '@/helpers/utils';
 
 const defaultFormData = {
+  newId: '',
   name: '',
   price: 0,
   supplier: '',
+  specification: '',
   launchDate: 0,
   classify: '',
-  count: '',
-}
+  // count: '',
+  unit: '',
+};
 
 export default defineComponent({
   props: {
@@ -18,6 +22,14 @@ export default defineComponent({
   },
   setup(props, context) {
     const addForm = reactive(clone(defaultFormData));
+
+    if (store.state.goodsClassify.length) {
+      addForm.classify = store.state.goodsClassify[0]._id;
+    };
+
+    if (store.state.goodsClassify.length) {
+      addForm.supplier = store.state.supplierList[0].newId;
+    };
 
     const submit = async () => {
       const form = clone(addForm);
@@ -28,6 +40,8 @@ export default defineComponent({
         .success((d, { data }) => {
           Object.assign(addForm, defaultFormData);
           message.success(data.msg);
+
+          context.emit('getList');
       });
     };
 
@@ -40,6 +54,7 @@ export default defineComponent({
       submit,
       props,
       close,
+      store: store.state,
     };
   },
 });
